@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:registration_form/StudentModel.dart';
+import 'package:registration_form/StudentController.dart';
 
 void main() => runApp(const MyApp());
 
@@ -19,7 +21,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-enum Gender { male, female }
 
 class MyStatefulWidget extends StatefulWidget {
   const MyStatefulWidget({Key? key}) : super(key: key);
@@ -35,8 +36,11 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
   TextEditingController coursesController = TextEditingController();
   TextEditingController addressController = TextEditingController();
+  int gender = 0;
+  var _gender ;
+  var courseTypes = ["Gave","Jee","WPS"];
 
-  Gender? _gender = Gender.male;
+  var selectedCourseType ;
 
   // bool valuefirst = false;
   // bool valuesecond = false;
@@ -106,10 +110,10 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
             ListTile(
               title: const Text('Male'),
-              leading: Radio<Gender>(
-                value: Gender.male,
+              leading: Radio(
+                value: "male",
                 groupValue: _gender,
-                onChanged: (Gender? value) {
+                onChanged: ( value) {
                   setState(() {
                     _gender = value;
                   });
@@ -119,10 +123,10 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             ),
             ListTile(
               title: const Text('Female'),
-              leading: Radio<Gender>(
-                value: Gender.female,
+              leading: Radio(
+                value: "female",
                 groupValue: _gender,
-                onChanged: (Gender? value) {
+                onChanged: ( value) {
                   setState(() {
                     _gender = value;
                   });
@@ -134,15 +138,24 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
             Container(
               padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-              child: TextField(
-
-                controller: coursesController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Courses',
-                ),
-              ),
+              child: Text("Courses :"),
             ),
+
+
+            DropdownButtonFormField(
+
+              items: courseTypes.map((String coursetype){
+                return DropdownMenuItem(
+                  value: coursetype,
+                  child: Text(coursetype),
+                );
+              }).toList(),
+              onChanged: (newValue){
+                setState(() => selectedCourseType = newValue);
+              },
+              value: selectedCourseType,
+            ),
+
 
 
 
@@ -167,11 +180,20 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                   onPressed: () {
                     print(nameController.text);
                     print(mobileController.text);
-                    print(mobileController.text);
+                    print(emailController.text);
+                    print(selectedCourseType);
 
-                    print(coursesController.text);
                     print(addressController.text);
                     print(_gender);
+
+
+                    String name = nameController.value.toString();
+                    String email = emailController.value.toString();
+                    String mobile = mobileController.value.toString();
+                    String address = addressController.value.toString();
+                    String gen = gender == 0? 'Male': 'Female';
+                    String course = this.selectedCourseType;
+                    var stu = StudentModel(name, email, mobile, gen, course, address);
                   },
                 )
             ),
